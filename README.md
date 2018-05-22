@@ -15,6 +15,7 @@ Got the code to call FPL's API from [spinach's project](https://github.com/spina
 
 ## TODO
 Many more.
-Planning on integrating Numpy and MatplotLib for data visualization
+Change the entry point to the visualization and not fplrequests.py
+Planning on integrating Numpy and MatplotLib for data visualization and graphs
 Tests
 

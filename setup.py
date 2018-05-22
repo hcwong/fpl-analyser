@@ -10,6 +10,7 @@ setup(
     description='Analyze FPL Leagues',
     install_requires=[
         "requests",
-        "pylint"
+        "pylint",
+        "python-dotenv"
     ],
 )
