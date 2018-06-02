@@ -1,8 +1,10 @@
 # FPL Analyzer
-A program to analyze your FPL performance, and more important, player performance
+A program to analyze your FPL performance. Just for fun. 
 
 ## Installation
-WIP
+Clone the project and put your league ID in the .env file
+From one folder up of the root directory of the project, run 
+`python3 -m fplanalyzer.fplanalyzer.visualization -g(gameweek)`
 
 ## Deployment
 WIP
@@ -15,7 +17,7 @@ Got the code to call FPL's API from [spinach's project](https://github.com/spina
 
 ## TODO
 Many more.
-Change the entry point to the visualization and not fplrequests.py
 Planning on integrating Numpy and MatplotLib for data visualization and graphs
-Tests
-
+Create a visualization class to handle all the visualizations
+Create a proper entry point for the project
+Tests 

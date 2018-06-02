@@ -4,8 +4,8 @@ setup(
     name='FPL Analyzer',
     version='0.10dev',
     author='Joshua Wong',
-    author_email='joshwonghc@gmail.com',
-    packages=['src'],
+    author_email='',
+    packages=['fplanalyzer'],
     license='LICENSE.txt',
     description='Analyze FPL Leagues',
     install_requires=[

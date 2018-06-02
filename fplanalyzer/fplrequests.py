@@ -1,6 +1,7 @@
 '''
 Taken from FantasyPremierLeague-Api.py by spinach and modified
 https://github.com/spinach/FantasyPremierLeague-Api.py/blob/master/playersPickedInLeague.py
+Use this to make calls to the FPL API
 '''
 
 import requests
@@ -14,31 +15,20 @@ import pathlib
 from dotenv import load_dotenv
 load_dotenv()
 
-
-FPL_URL = "https://fantasy.premierleague.com/drf/"
-USER_SUMMARY_SUBURL = "element-summary/"
-LEAGUE_CLASSIC_STANDING_SUBURL = "leagues-classic-standings/"
-LEAGUE_H2H_STANDING_SUBURL = "leagues-h2h-standings/"
-TEAM_ENTRY_SUBURL = "entry/"
-PLAYERS_INFO_SUBURL = "bootstrap-static"
-PLAYERS_INFO_FILENAME = './results/allPlayerInfo.json'
-
-USER_SUMMARY_URL = FPL_URL + USER_SUMMARY_SUBURL
-PLAYERS_INFO_URL = FPL_URL + PLAYERS_INFO_SUBURL
-START_PAGE = 1
+from .. import definitions
 
 # Download all player data: https://fantasy.premierleague.com/drf/bootstrap-static
 def getPlayersInfo():
-    r = requests.get(PLAYERS_INFO_URL)
+    r = requests.get(definitions.PLAYERS_INFO_URL)
     jsonResponse = r.json()
-    directory = os.path.dirname(PLAYERS_INFO_FILENAME)
+    directory = os.path.dirname(definitions.PLAYERS_INFO_FILENAME)
     pathlib.Path(directory).mkdir(parents=True, exist_ok=True)
-    with open(PLAYERS_INFO_FILENAME, 'w') as outfile:
+    with open(definitions.PLAYERS_INFO_FILENAME, 'w') as outfile:
         json.dump(jsonResponse, outfile)
 
 # Read player info from the json file that we downlaoded
 def getAllPlayersDetailedJson():
-    with open(PLAYERS_INFO_FILENAME) as json_data:
+    with open(definitions.PLAYERS_INFO_FILENAME) as json_data:
         d = json.load(json_data)
         return d
 
@@ -73,7 +63,7 @@ def getUserEntryIds(league_id, ls_page, league_Standing_Url):
 # Team picked by user. example: https://fantasy.premierleague.com/drf/entry/2677936/event/1/picks with 2677936 being entry_id of the player
 def getplayersPickedForEntryId(entry_id, GWNumber):
     eventSubUrl = "event/" + str(GWNumber) + "/picks"
-    playerTeamUrlForSpecificGW = FPL_URL + TEAM_ENTRY_SUBURL + str(entry_id) + "/" + eventSubUrl
+    playerTeamUrlForSpecificGW = definitions.FPL_URL + definitions.TEAM_ENTRY_SUBURL + str(entry_id) + "/" + eventSubUrl
     r = requests.get(playerTeamUrlForSpecificGW)
     jsonResponse = r.json()
     picks = jsonResponse["picks"]
@@ -146,14 +136,14 @@ def main():
     parser.add_argument('-t', '--type', help='league type')
     args = vars(parser.parse_args())
 
-    pageCount = START_PAGE
+    pageCount = definitions.START_PAGE
     GWNumber = args['gameweek']
     leagueIdSelected = os.environ['LEAGUE_ID']
 
     if args['type'] == "h2h":
-        leagueStandingUrl = FPL_URL + LEAGUE_H2H_STANDING_SUBURL
+        leagueStandingUrl = definitions.FPL_URL + definitions.LEAGUE_H2H_STANDING_SUBURL
     else:
-        leagueStandingUrl = FPL_URL + LEAGUE_CLASSIC_STANDING_SUBURL
+        leagueStandingUrl = definitions.FPL_URL + definitions.LEAGUE_CLASSIC_STANDING_SUBURL
 
     
     # collate all the player and captain picks in in a single csv file 
@@ -162,5 +152,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
