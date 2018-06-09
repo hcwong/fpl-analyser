@@ -23,13 +23,18 @@ class Visualizer(object):
     # TODO: Maybe parse the CSV just one time before we download it? So don't have to repeatedly perform this
     def cleanData(self):
         gwDF = self.data[0]
+        barLabels = []
         for index, row in gwDF.iterrows():
            gwDF.at[index,'name'] = re.sub(r'\'|b\'' , "", row['name'])
+           barLabels.append(gwDF.iloc[index]['name'])
+        return barLabels
 
     def visualize(self):
-        self.cleanData()
-        self.data[0].plot(kind='bar')
-        plt.show() # TODO: Too many bar charts, should select the top 10. Also the x axis is the DF index instead of the player names
+        xLabels = self.cleanData()
+        ax = self.data[0].plot(kind='bar', figsize=(13,7))
+        ax.set_xticklabels(xLabels)
+        ax.legend(['Number of Times picked by Players'])
+        plt.show()
 
 def main():
     parser = argparse.ArgumentParser(description='Visualize Players picked in a certain gameweek')

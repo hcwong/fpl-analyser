@@ -16,7 +16,7 @@ Got the code to call FPL's API from [spinach's project](https://github.com/spina
 
 ## TODO
 Many more.
-Planning on integrating Numpy and MatplotLib for data visualization and graphs
-Create a visualization class to handle all the visualizations
 Create a proper entry point for the project
+Create setup.py properly (if it is even neccessary, need to read up more)
+Maybe tweak project structure for neatness
 Tests 
