@@ -115,9 +115,10 @@ def getPlayerAndCaptainNumbers(leagueIdSelected, pageCount, leagueStandingUrl, G
             listOfCountOfCaptainsPicked = sorted(countOfCaptainsPicked.items(), key=lambda x: x[1], reverse=True)
             writeToFile(listOfCountOfCaptainsPicked, "captain-" + str(leagueIdSelected) + "-GW" + str(GWNumber) + ".csv")
             pageCount += 1
+            return True
         except Exception as e:
             print(e)
-            return
+            return 
 
 
 # Writes the results to csv file

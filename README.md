@@ -6,10 +6,11 @@ From root directory of the project, run
 `python3 -m fplanalyzer.visualization -g(gameweek)`
 
 ## Deployment
-WIP
+Unnecessary?
 
 ## Tests
-WIP
+From root directory of the project, run
+`python3 -m fplanalyzer.tests.tests`
 
 ## Acknowledgements
 Got the code to call FPL's API from [spinach's project](https://github.com/spinach/FantasyPremierLeague-Api.py) 
