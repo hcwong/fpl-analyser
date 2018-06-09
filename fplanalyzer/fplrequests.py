@@ -15,21 +15,20 @@ import pathlib
 # from dotenv import load_dotenv
 # load_dotenv()
 
-from .. import definitions
-ROOT_DIR = definitions.ROOT_DIR
+from .definitions import *
 
 # Download all player data: https://fantasy.premierleague.com/drf/bootstrap-static
 def getPlayersInfo():
-    r = requests.get(definitions.PLAYERS_INFO_URL)
+    r = requests.get(PLAYERS_INFO_URL)
     jsonResponse = r.json()
-    directory = os.path.dirname(definitions.PLAYERS_INFO_FILENAME)
+    directory = os.path.dirname(PLAYERS_INFO_FILENAME)
     pathlib.Path(directory).mkdir(parents=True, exist_ok=True)
-    with open(definitions.PLAYERS_INFO_FILENAME, 'w') as outfile:
+    with open(PLAYERS_INFO_FILENAME, 'w') as outfile:
         json.dump(jsonResponse, outfile)
 
 # Read player info from the json file that we downlaoded
 def getAllPlayersDetailedJson():
-    with open(definitions.PLAYERS_INFO_FILENAME) as json_data:
+    with open(PLAYERS_INFO_FILENAME) as json_data:
         d = json.load(json_data)
         return d
 
@@ -64,7 +63,7 @@ def getUserEntryIds(league_id, ls_page, league_Standing_Url):
 # Team picked by user. example: https://fantasy.premierleague.com/drf/entry/2677936/event/1/picks with 2677936 being entry_id of the player
 def getplayersPickedForEntryId(entry_id, GWNumber):
     eventSubUrl = "event/" + str(GWNumber) + "/picks"
-    playerTeamUrlForSpecificGW = definitions.FPL_URL + definitions.TEAM_ENTRY_SUBURL + str(entry_id) + "/" + eventSubUrl
+    playerTeamUrlForSpecificGW = FPL_URL + TEAM_ENTRY_SUBURL + str(entry_id) + "/" + eventSubUrl
     r = requests.get(playerTeamUrlForSpecificGW)
     jsonResponse = r.json()
     picks = jsonResponse["picks"]
@@ -123,7 +122,7 @@ def getPlayerAndCaptainNumbers(leagueIdSelected, pageCount, leagueStandingUrl, G
 
 # Writes the results to csv file
 def writeToFile(countOfPlayersPicked, fileName):
-    fullPath = f"{ROOT_DIR}/fplanalyzer/results/{fileName}"
+    fullPath = f"{PACKAGE_DIR}/results/{fileName}"
     with open(fullPath, 'w') as out:
         csv_out = csv.writer(out)
         csv_out.writerow(['name', 'num'])
@@ -137,14 +136,14 @@ def main():
     parser.add_argument('-t', '--type', help='league type')
     args = vars(parser.parse_args())
 
-    pageCount = definitions.START_PAGE
+    pageCount = START_PAGE
     GWNumber = args['gameweek']
     leagueIdSelected = os.environ['LEAGUE_ID']
 
     if args['type'] == "h2h":
-        leagueStandingUrl = definitions.FPL_URL + definitions.LEAGUE_H2H_STANDING_SUBURL
+        leagueStandingUrl = FPL_URL + LEAGUE_H2H_STANDING_SUBURL
     else:
-        leagueStandingUrl = definitions.FPL_URL + definitions.LEAGUE_CLASSIC_STANDING_SUBURL
+        leagueStandingUrl = FPL_URL + LEAGUE_CLASSIC_STANDING_SUBURL
 
     
     # collate all the player and captain picks in in a single csv file 

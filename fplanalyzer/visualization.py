@@ -7,10 +7,8 @@ import os
 from dotenv import load_dotenv 
 load_dotenv()
 
-from .. import definitions
+from .definitions import *
 from .fplrequests import getPlayerAndCaptainNumbers
-
-ROOT_DIR = definitions.ROOT_DIR
 
 class Visualizer(object):
     def __init__(self):
@@ -41,7 +39,7 @@ def main():
     parser.add_argument('-g','--gameweek', help='gameweek number', required=True)
     args = vars(parser.parse_args())
 
-    leagueStandingUrl = definitions.FPL_URL + definitions.LEAGUE_CLASSIC_STANDING_SUBURL
+    leagueStandingUrl = FPL_URL + LEAGUE_CLASSIC_STANDING_SUBURL
     pageCount = 1
     GWNumber = args['gameweek']
     leagueIdSelected = os.environ['LEAGUE_ID']  
@@ -49,7 +47,7 @@ def main():
     visualizer = Visualizer() 
 
     # if the file does not exist, then throw error and prompt download
-    resultsPath = f"{ROOT_DIR}/fplanalyzer/results"
+    resultsPath = f"{PACKAGE_DIR}/results"
     found = False
     for f in os.listdir(resultsPath):
         if (re.search(f"captain-{leagueIdSelected}-GW{GWNumber}", f)):

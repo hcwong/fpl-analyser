@@ -1,7 +1,7 @@
 import os
 
 # define project root
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # FPL Urls to call API
 FPL_URL = "https://fantasy.premierleague.com/drf/"
