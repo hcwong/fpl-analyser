@@ -1,5 +1,5 @@
 import pandas as pd
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import argparse
 import re
 import os
@@ -28,6 +28,8 @@ class Visualizer(object):
 
     def visualize(self):
         self.cleanData()
+        self.data[0].plot(kind='bar')
+        plt.show() # TODO: Too many bar charts, should select the top 10. Also the x axis is the DF index instead of the player names
 
 def main():
     parser = argparse.ArgumentParser(description='Visualize Players picked in a certain gameweek')

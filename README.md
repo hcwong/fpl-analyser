@@ -1,6 +1,5 @@
 # FPL Analyzer
-A program to analyze your FPL performance. Just for fun. 
-
+A Project to learn Pandas and to visualize FPL data
 ## Installation
 Clone the project and put your league ID in the .env file
 From one folder up of the root directory of the project, run 
