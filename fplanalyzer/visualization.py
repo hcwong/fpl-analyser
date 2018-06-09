@@ -1,4 +1,4 @@
-import numpy as np
+import pandas as pd
 import matplotlib as plt
 import argparse
 import re
@@ -12,13 +12,22 @@ from .fplrequests import getPlayerAndCaptainNumbers
 
 ROOT_DIR = definitions.ROOT_DIR
 
-# Read the csv and load it into a numpy array
-def readCSV(path):
-    data = np.genfromtxt(path, delimiter=',')
+class Visualizer(object):
+    def __init__(self):
+        self.data = []
 
-# TODO: write a function to handle the visualization
+    def readCSV(self, path):
+        gwData = pd.read_csv(path, names=None)
+        self.data.append(gwData)
 
-# TODO: Maybe store the parsed arrays somewhere? 
+    # TODO: Maybe parse the CSV just one time before we download it? So don't have to repeatedly perform this
+    def cleanData(self):
+        gwDF = self.data[0]
+        for index, row in gwDF.iterrows():
+           gwDF.at[index,'name'] = re.sub(r'\'|b\'' , "", row['name'])
+
+    def visualize(self):
+        self.cleanData()
 
 def main():
     parser = argparse.ArgumentParser(description='Visualize Players picked in a certain gameweek')
@@ -28,27 +37,26 @@ def main():
     leagueStandingUrl = definitions.FPL_URL + definitions.LEAGUE_CLASSIC_STANDING_SUBURL
     pageCount = 1
     GWNumber = args['gameweek']
-    leagueIdSelected = os.environ['LEAGUE_ID']   
+    leagueIdSelected = os.environ['LEAGUE_ID']  
+
+    visualizer = Visualizer() 
 
     # if the file does not exist, then throw error and prompt download
-    # TODO: should probably abstract out the get playerand captain number function into two functions
-    # TODO: fix the path in listdir, try abspath
     resultsPath = f"{ROOT_DIR}/fplanalyzer/results"
+    found = False
     for f in os.listdir(resultsPath):
         if (re.search(f"captain-{leagueIdSelected}-GW{GWNumber}", f)):
             # readCSV(os.path.abspath(f"{resultsPath}/{f}"))
             # For now we are only using the playersPicked data and not captain
             pass
-        else if (re.search(f"Picked-{leagueIdSelected}-GW{GWNumber}", f)):
-            readCSV(os.path.abspath(f"{resultsPath}/{f}"))
+        elif (re.search(f"Picked-{leagueIdSelected}-GW{GWNumber}", f)):
+            visualizer.readCSV(os.path.abspath(f"{resultsPath}/{f}"))
+            found = True
             break
-        else:
-            getPlayerAndCaptainNumbers(leagueIdSelected, pageCount, leagueStandingUrl, GWNumber)
-           # TODO: call readcsv here as well once above function is done?
-
-# TODO: Make visualization into a class?
-# class Visualizer(object):
-#     def __init__(self):    
+    if not found: 
+        getPlayerAndCaptainNumbers(leagueIdSelected, pageCount, leagueStandingUrl, GWNumber)
+        visualizer.readCSV(os.path.abspath(f"{resultsPath}/playersPicked-{leagueIdSelected}-GW{GWNumber}"))
+    visualizer.visualize()
 
 
 if __name__ == "__main__":

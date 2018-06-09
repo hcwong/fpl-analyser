@@ -12,10 +12,11 @@ import os
 import pathlib
 
 #load the env variables
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 from .. import definitions
+ROOT_DIR = definitions.ROOT_DIR
 
 # Download all player data: https://fantasy.premierleague.com/drf/bootstrap-static
 def getPlayersInfo():
@@ -122,7 +123,7 @@ def getPlayerAndCaptainNumbers(leagueIdSelected, pageCount, leagueStandingUrl, G
 
 # Writes the results to csv file
 def writeToFile(countOfPlayersPicked, fileName):
-    fullPath = './results/' + fileName
+    fullPath = f"{ROOT_DIR}/fplanalyzer/results/{fileName}"
     with open(fullPath, 'w') as out:
         csv_out = csv.writer(out)
         csv_out.writerow(['name', 'num'])
