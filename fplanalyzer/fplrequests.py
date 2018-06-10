@@ -10,6 +10,7 @@ import csv
 import argparse
 import os
 import pathlib
+import sys
 
 #load the env variables
 # from dotenv import load_dotenv
@@ -19,13 +20,18 @@ from .definitions import *
 
 # Download all player data: https://fantasy.premierleague.com/drf/bootstrap-static
 def getPlayersInfo():
-    with requests.Session() as s:
-        r = s.get(PLAYERS_INFO_URL)
-    jsonResponse = r.json()
-    directory = os.path.dirname(PLAYERS_INFO_FILENAME)
-    pathlib.Path(directory).mkdir(parents=True, exist_ok=True)
-    with open(PLAYERS_INFO_FILENAME, 'w') as outfile:
-        json.dump(jsonResponse, outfile)
+    try:
+        with requests.Session() as s:
+            r = s.get(PLAYERS_INFO_URL)        
+        jsonResponse = r.json()
+        directory = os.path.dirname(PLAYERS_INFO_FILENAME)
+        pathlib.Path(directory).mkdir(parents=True, exist_ok=True)
+        with open(PLAYERS_INFO_FILENAME, 'w') as outfile:
+            json.dump(jsonResponse, outfile)
+
+    except requests.exceptions.RequestException as e:
+        print(e)
+        sys.exit(1)
 
 # Read player info from the json file that we downlaoded
 def getAllPlayersDetailedJson():
@@ -46,38 +52,43 @@ def mapPlayerNametoID():
 # Get users in league: https://fantasy.premierleague.com/drf/leagues-classic-standings/336217?phase=1&le-page=1&ls-page=5
 def getUserEntryIds(league_id, ls_page, league_Standing_Url):
     league_url = league_Standing_Url + str(league_id) + "?phase=1&le-page=1&ls-page=" + str(ls_page)
-    with requests.Session() as s:
-        r = s.get(league_url)
-    jsonResponse = r.json()
-    standings = jsonResponse["standings"]["results"]
-    if not standings:
-        print("no more standings found!")
-        return None
+    try:
+        with requests.Session() as s:
+            r = s.get(league_url)
+        jsonResponse = r.json()
+        standings = jsonResponse["standings"]["results"]
+        if not standings:
+            print("no more standings found!")
+            return None
+        entries = []
+        for player in standings:
+            entries.append(player["entry"])
+        return entries 
 
-    entries = []
-
-    for player in standings:
-        entries.append(player["entry"])
-
-    return entries
-
+    except requests.exceptions.RequestException as e:
+        print(e)
+        sys.exit(1)
 
 # Team picked by user. example: https://fantasy.premierleague.com/drf/entry/2677936/event/1/picks with 2677936 being entry_id of the player
 def getplayersPickedForEntryId(entry_id, GWNumber):
     eventSubUrl = "event/" + str(GWNumber) + "/picks"
     playerTeamUrlForSpecificGW = FPL_URL + TEAM_ENTRY_SUBURL + str(entry_id) + "/" + eventSubUrl
-    with requests.Session() as s:
-        r = s.get(playerTeamUrlForSpecificGW)
-    jsonResponse = r.json()
-    picks = jsonResponse["picks"]
-    elements = []
-    captainId = 1
-    for pick in picks:
-        elements.append(pick["element"])
-        if pick["is_captain"]:
-            captainId = pick["element"]
+    try:
+        with requests.Session() as s:
+            r = s.get(playerTeamUrlForSpecificGW)
+        jsonResponse = r.json()
+        picks = jsonResponse["picks"]
+        elements = []
+        captainId = 1
+        for pick in picks:
+            elements.append(pick["element"])
+            if pick["is_captain"]:
+                captainId = pick["element"]
 
-    return elements, captainId
+        return elements, captainId
+    except requests.exceptions.RequestException as e:
+        print(e)
+        sys.exit(1)
 
 # Calculate the number of players and captains picked for gameweek
 def getPlayerAndCaptainNumbers(leagueIdSelected, pageCount, leagueStandingUrl, GWNumber):
@@ -119,7 +130,7 @@ def getPlayerAndCaptainNumbers(leagueIdSelected, pageCount, leagueStandingUrl, G
             writeToFile(listOfCountOfCaptainsPicked, "captain-" + str(leagueIdSelected) + "-GW" + str(GWNumber) + ".csv")
             pageCount += 1
             return True
-        except Exception as e:
+        except Exception as e: # TODO: Give a more specific Error?
             print('Error while getting the data' ,e)
             return False
 
