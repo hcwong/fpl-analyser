@@ -19,7 +19,8 @@ from .definitions import *
 
 # Download all player data: https://fantasy.premierleague.com/drf/bootstrap-static
 def getPlayersInfo():
-    r = requests.get(PLAYERS_INFO_URL)
+    with requests.Session() as s:
+        r = s.get(PLAYERS_INFO_URL)
     jsonResponse = r.json()
     directory = os.path.dirname(PLAYERS_INFO_FILENAME)
     pathlib.Path(directory).mkdir(parents=True, exist_ok=True)
@@ -45,7 +46,8 @@ def mapPlayerNametoID():
 # Get users in league: https://fantasy.premierleague.com/drf/leagues-classic-standings/336217?phase=1&le-page=1&ls-page=5
 def getUserEntryIds(league_id, ls_page, league_Standing_Url):
     league_url = league_Standing_Url + str(league_id) + "?phase=1&le-page=1&ls-page=" + str(ls_page)
-    r = requests.get(league_url)
+    with requests.Session() as s:
+        r = s.get(league_url)
     jsonResponse = r.json()
     standings = jsonResponse["standings"]["results"]
     if not standings:
@@ -64,7 +66,8 @@ def getUserEntryIds(league_id, ls_page, league_Standing_Url):
 def getplayersPickedForEntryId(entry_id, GWNumber):
     eventSubUrl = "event/" + str(GWNumber) + "/picks"
     playerTeamUrlForSpecificGW = FPL_URL + TEAM_ENTRY_SUBURL + str(entry_id) + "/" + eventSubUrl
-    r = requests.get(playerTeamUrlForSpecificGW)
+    with requests.Session() as s:
+        r = s.get(playerTeamUrlForSpecificGW)
     jsonResponse = r.json()
     picks = jsonResponse["picks"]
     elements = []
