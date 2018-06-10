@@ -15,6 +15,8 @@ class Test(unittest.TestCase):
 
     def testApiCallSuccess(self):
         self.assertTrue(getPlayerAndCaptainNumbers(self.leagueIdSelected, self.pageCount, self.leagueStandingUrl, 2))
-     
+    def testApiCallFailure(self):
+        self.assertFalse(getPlayerAndCaptainNumbers(self.leagueIdSelected, self.pageCount, self.leagueStandingUrl, 'abcd'))
+
 if __name__ == '__main__':
     unittest.main()    

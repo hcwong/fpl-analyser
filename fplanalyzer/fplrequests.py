@@ -117,8 +117,8 @@ def getPlayerAndCaptainNumbers(leagueIdSelected, pageCount, leagueStandingUrl, G
             pageCount += 1
             return True
         except Exception as e:
-            print(e)
-            return 
+            print('Error while getting the data' ,e)
+            return False
 
 
 # Writes the results to csv file

@@ -18,4 +18,5 @@ Got the code to call FPL's API from [spinach's project](https://github.com/spina
 ## TODO
 Create more visualizations
 Create a proper entry point for the project?
-Tests 
+More tests if necessary
+Implement contexts when making a call to the FPL API
