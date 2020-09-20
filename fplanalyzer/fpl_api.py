@@ -48,7 +48,7 @@ def get_player_gameweek_interval(user_entry, start_gameweek_int, end_gameweek_in
         for gw in response["current"]:
             if gw["event"] < start_gameweek_int or gw["event"] > end_gameweek_int:
                 continue
-            points += gw["points"]
+            points += (gw["points"] - gw["event_transfers_cost"])
 
         return points
     except Exception as e:
