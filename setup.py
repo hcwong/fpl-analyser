@@ -1,18 +1,11 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
     name='fplanalyzer',
     version='0.20dev',
     author='Joshua Wong',
     author_email='',
-    packages=['fplanalyzer'],
-    license='LICENSE.txt',
-    description='See your FPL league in graphs',
-    install_requires=[
-        "requests",
-        "pylint",
-        "python-dotenv"
-        "pandas",
-        "matplotlib"
-    ],
+    packages=find_packages(),
+    license='LICENSE',
+    description='Just a bot',
 )
