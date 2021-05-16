@@ -23,5 +23,4 @@ Telegram::Bot::Client.run(ENV['BOT_TOKEN']) do |bot|
   if [23, 5, 2].include?(diff.floor)
     bot.api.send_message(chat_id: ENV['CHAT_ID'], text: message)
   end
-  bot.api.send_message(chat_id: ENV['CHAT_ID'], text: message)
 end
