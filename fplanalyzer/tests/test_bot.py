@@ -88,4 +88,5 @@ class TestBot(unittest.TestCase):
         context = MockContext(['1','2'])
         update = MockUpdate()
         get_rankings_over_last_gameweeks(update, context)
+        self.assertTrue(mock_get.call_count == 7)
 
